@@ -7,6 +7,27 @@ let map;
 let pinLayer;
 let zipHeatLayer;
 
+const blueIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const redIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Add more colors as needed
+
+
 function getColor(value, max) {
   const percent = value / max;
   return percent > 0.80 ? '#006d2c'
@@ -61,18 +82,15 @@ async function createMap() {
 
   const maxCount = Math.max(...Object.values(zipCounts));
 
-  pinLayer = L.layerGroup();
-  data.forEach(({ zip, lat, lon }) => {
-    const count = zipCounts[zip];
-    L.circleMarker([lat, lon], {
-      radius: 4,
-      fillColor: '#0077cc',
-      color: '#003366',
-      fillOpacity: 0.7
-    })
+pinLayer = L.layerGroup();
+data.forEach(({ zip, lat, lon }) => {
+  const count = zipCounts[zip];
+  // Choose icon based on logic, here blue for all
+  L.marker([lat, lon], { icon: blueIcon })
     .bindPopup(`${count} visit(s) from ${zip}`)
     .addTo(pinLayer);
-  });
+});
+
 
   fetch('zip_geojson.json')
     .then(response => response.json())
