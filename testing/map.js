@@ -25,6 +25,15 @@ const redIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+const greenIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-greeb.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 // Add more colors as needed
 
 
@@ -85,11 +94,18 @@ async function createMap() {
 pinLayer = L.layerGroup();
 data.forEach(({ zip, lat, lon }) => {
   const count = zipCounts[zip];
-  // Choose icon based on logic, here blue for all
-  L.marker([lat, lon], { icon: blueIcon })
+  let iconToUse = blueIcon;
+  if (count > 10) {
+    iconToUse = redIcon;
+  } else if (count > 5) {
+    iconToUse = greenIcon;
+  }
+
+  L.marker([lat, lon], { icon: iconToUse })
     .bindPopup(`${count} visit(s) from ${zip}`)
     .addTo(pinLayer);
 });
+
 
 
   fetch('zip_geojson.json')
