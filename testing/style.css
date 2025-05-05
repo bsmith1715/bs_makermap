@@ -14,12 +14,12 @@
   border: none;
   border-radius: 6px;
   padding: 12px 18px;
-  font-size: 16px;
+  font-size: 2em;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   transition: background 0.2s;
 }
 
 .floating-buttons button:hover {
-  background-color: #218838; /* darker green on hover */
+  background-color: ##336633; /* darker green on hover */
 }
