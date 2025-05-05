@@ -13,8 +13,10 @@
   <link rel="stylesheet" href="/bs_makermap/testing/style.css">
 </head>
 <body>
-  <button onclick="toggleView('pins')">Show Pins</button>
-  <button onclick="toggleView('zipHeatmap')">Show Zip Code Heatmap</button>
+  <div class="floating-buttons">
+    <button onclick="toggleView('pins')">Show Pins</button>
+    <button onclick="toggleView('zipHeatmap')">Show Zip Code Heatmap</button>
+  </div>
   <div id="map"></div>
 
   <!-- Leaflet JS -->
