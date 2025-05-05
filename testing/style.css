@@ -1,3 +1,25 @@
-.button {
-  background-color: green;
+.floating-buttons {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* space between buttons */
+  z-index: 1000; /* ensure above the map */
+}
+
+.floating-buttons button {
+  background-color: #28a745; /* Bootstrap green */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: background 0.2s;
+}
+
+.floating-buttons button:hover {
+  background-color: #218838; /* darker green on hover */
 }
