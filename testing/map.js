@@ -63,7 +63,9 @@ async function createMap() {
     zipCounts[key] = (zipCounts[key] || 0) + 1;
   });
 
+  const maxCount = Math.max(...Object.values(zipCounts));
   pinLayer = L.layerGroup();
+
   data.forEach(({ country, code, lat, lon }) => {
     const key = `${country}-${code}`;
     const count = zipCounts[key];
@@ -80,7 +82,60 @@ async function createMap() {
       .addTo(pinLayer);
   });
 
+  fetch('zip_geojson.json')
+    .then(response => response.json())
+    .then(geojson => {
+      zipHeatLayer = L.geoJSON(geojson, {
+        style: feature => {
+          const zip = feature.properties.ZCTA5CE10;
+          const key = `US-${zip}`;
+          const count = zipCounts[key] || 0;
+          return {
+            fillColor: getColor(count, maxCount),
+            fillOpacity: 1,
+            color: '#222',
+            weight: 0.5,
+            opacity: 0.3
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const zip = feature.properties.ZCTA5CE10;
+          const key = `US-${zip}`;
+          const count = zipCounts[key] || 0;
+          if (count > 0) {
+            layer.bindPopup(`ZIP ${zip}: ${count} visit(s)`);
+          }
+        }
+      });
+
+      // Ensure initial state based on previous selection
+      const lastMode = localStorage.getItem('mapViewMode') || 'pins';
+      if (lastMode === 'zipHeatmap') {
+        zipHeatLayer.addTo(map);
+      } else {
+        pinLayer.addTo(map);
+      }
+    });
+
   pinLayer.addTo(map);
 }
+
+// Ensure `toggleView` function is available globally
+window.toggleView = function (mode) {
+  if (!zipHeatLayer || !pinLayer) return;
+  if (mode === 'pins') {
+    map.removeLayer(zipHeatLayer);
+    map.addLayer(pinLayer);
+  } else if (mode === 'zipHeatmap') {
+    map.removeLayer(pinLayer);
+    map.addLayer(zipHeatLayer);
+  }
+  localStorage.setItem('mapViewMode', mode);
+};
+
+// Auto-refresh every 60 seconds
+setInterval(() => {
+  location.reload();
+}, 60000);
 
 createMap();
